@@ -12,31 +12,42 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Animation implements Listener {
-    private int delay;
-    private File directory;
+    private final int delay;
     private int index = 0;
     public ArrayList<AnimationFrame> animationFrames = new ArrayList<>();
 
     public Animation(int delay, List<String[]> entries, org.bukkit.World world, String name) {
         this.delay = delay;
-        directory = new File(WorldEditAnimations.getInstance().getDataFolder(), name);
+        File directory = new File(WorldEditAnimations.getInstance().getDataFolder(), name);
+        Map<String, Clipboard> clipboardMap = new HashMap<>();
 
-        for (int i = 0; i < entries.size(); i++) {
-            String[] locs = entries.get(i)[0].split(" ");
+        for (String[] strings : entries) {
+            String[] positionString = strings[0].split(" ");
 
-            File file = new File(directory, entries.get(i)[1]);
-            Clipboard clipboard;
+            File file = new File(directory, strings[1]);
+
             ClipboardFormat format = ClipboardFormats.findByFile(file);
-            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-                clipboard = reader.read();
-                AnimationFrame entry = new AnimationFrame(new Location(world, Integer.parseInt(locs[0]), Integer.parseInt(locs[1]), Integer.parseInt(locs[2])), clipboard);
-                this.animationFrames.add(entry);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (format == null) continue;
+
+            Clipboard clipboard = clipboardMap.computeIfAbsent(file.getName(), key -> {
+                try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+                    return reader.read();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+
+            if (clipboard == null) continue;
+
+            Location loc = new Location(world, Integer.parseInt(positionString[0]), Integer.parseInt(positionString[1]), Integer.parseInt(positionString[2]));
+            AnimationFrame entry = new AnimationFrame(loc, clipboard);
+            this.animationFrames.add(entry);
         }
 
     }
