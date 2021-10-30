@@ -31,17 +31,33 @@ public final class WorldEditAnimations extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        LiteralCommandNode command = literal("animation");
-        CommandNode stopCommand = literal("stop").then(argument("key", stringParser()).tabCompletes(c -> testAnimations.keySet().stream().toList()).executes(this::stopCommand));
-        CommandNode startCommand = literal("start").then(argument("key", stringParser()).tabCompletes(this::tabComplete).executes(this::startCommand));
-        command.then(startCommand);
-        command.then(stopCommand);
+        CommandNode stopCommand = literal("stop").then(argument("key", stringParser())
+                .tabCompletes(c -> testAnimations.keySet().stream().toList())
+                .executes(this::stopCommand)
+                .withPermission("animation.manage"));
+
+        CommandNode startCommand = literal("start").then(argument("key", stringParser())
+                .tabCompletes(this::tabComplete)
+                .executes(this::startCommand)
+                .withPermission("animation.manage"));
 
         CommandNode autostart = literal("autostart");
-        autostart.executes(this::sendAutostartInfo);
-        autostart.then(argument("key", stringParser()).tabCompletes(this::tabComplete).executes(this::toggleAutostart));
+        autostart.executes(this::sendAutostartInfo)
+                .withPermission("animation.manage");
+        autostart.then(argument("key", stringParser())
+                .tabCompletes(this::tabComplete)
+                .executes(this::toggleAutostart)
+                .withPermission("animation.manage"));
+
+
+        LiteralCommandNode command = literal("animation");
+        command.then(startCommand);
+        command.then(stopCommand);
         command.then(autostart);
-        command.then(literal("reload").executes(this::reload));
+        command.then(literal("reload")
+                .executes(this::reload)
+                .withPermission("animation.manage"));
+
         CommandRegistry.register(command);
 
         Bukkit.getScheduler().runTask(this, this::postEnable);
@@ -136,6 +152,7 @@ public final class WorldEditAnimations extends JavaPlugin {
         all.addAll(files);
         all.addAll(started);
         all.sort(String::compareTo);
+        all = all.stream().distinct().toList();
         CommandSender sender = context.getSender();
         sender.sendMessage(GOLD + "Use " + YELLOW + "/animation autostart <key> " + GOLD + " to toggle ");
         sender.sendMessage(GREEN + "running " + GRAY + "not running " + RED + "file deleted");
