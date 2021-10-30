@@ -32,19 +32,23 @@ public final class WorldEditAnimations extends JavaPlugin {
         instance = this;
 
         LiteralCommandNode command = literal("animation");
-        CommandNode stopCommand = literal("stop").then(argument("key", stringParser()).executes(this::stopCommand));
-        CommandNode startCommand = literal("start").then(argument("key", stringParser()).executes(this::startCommand));
+        CommandNode stopCommand = literal("stop").then(argument("key", stringParser()).tabCompletes(c -> testAnimations.keySet().stream().toList()).executes(this::stopCommand));
+        CommandNode startCommand = literal("start").then(argument("key", stringParser()).tabCompletes(this::tabComplete).executes(this::startCommand));
         command.then(startCommand);
         command.then(stopCommand);
 
         CommandNode autostart = literal("autostart");
         autostart.executes(this::sendAutostartInfo);
-        autostart.then(argument("key", stringParser()).executes(this::toggleAutostart));
+        autostart.then(argument("key", stringParser()).tabCompletes(this::tabComplete).executes(this::toggleAutostart));
         command.then(autostart);
         command.then(literal("reload").executes(this::reload));
         CommandRegistry.register(command);
 
         Bukkit.getScheduler().runTask(this, this::postEnable);
+    }
+
+    private List<String> tabComplete(CommandContext context) {
+        return getAnimationFolderNames().stream().toList();
     }
 
     private void postEnable() {
@@ -125,10 +129,7 @@ public final class WorldEditAnimations extends JavaPlugin {
     }
 
     private void sendAutostartInfo(CommandContext context) {
-        Set<String> files = Arrays.stream(Objects.requireNonNull(getDataFolder().listFiles()))
-                .map(File::getName)
-                .filter(this::exists)
-                .collect(Collectors.toSet());
+        Set<String> files = getAnimationFolderNames();
         Set<String> started = animationList.keySet();
 
         List<String> all = new ArrayList<>();
@@ -139,6 +140,13 @@ public final class WorldEditAnimations extends JavaPlugin {
         sender.sendMessage(GOLD + "Use " + YELLOW + "/animation autostart <key> " + GOLD + " to toggle ");
         sender.sendMessage(GREEN + "running " + GRAY + "not running " + RED + "file deleted");
         all.forEach(s -> sender.sendMessage(getColor(files.contains(s), started.contains(s)) + s));
+    }
+
+    private Set<String> getAnimationFolderNames() {
+        return Arrays.stream(Objects.requireNonNull(getDataFolder().listFiles()))
+                .map(File::getName)
+                .filter(this::exists)
+                .collect(Collectors.toSet());
     }
 
     private ChatColor getColor(boolean fileExists, boolean started) {
