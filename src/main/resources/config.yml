@@ -1,15 +1,4 @@
-animations:
-  animation1:
-    delay: 5
-    schems:
-      - ["-21 110 101", "cyberpunkcar1.schem"]
-      - ["-21 110 100", "cyberpunkcar1.schem"]
-      - ["-21 110 99", "cyberpunkcar1.schem"]
-      - ["-21 110 98", "cyberpunkcar1.schem"]
-      - ["-21 110 97", "cyberpunkcar1.schem"]
-      - ["-21 110 96", "cyberpunkcar1.schem"]
-      - ["-21 110 95", "cyberpunkcar1.schem"]
-      - ["-21 110 94", "cyberpunkcar1.schem"]
-      - ["-21 110 93", "cyberpunkcar1.schem"]
-      - ["-21 110 92", "cyberpunkcar1.schem"]
-      - ["-21 110 91", "cyberpunkcar1.schem"]
+enabled_animations:
+  - animation1
+  - animation2
+debug: true

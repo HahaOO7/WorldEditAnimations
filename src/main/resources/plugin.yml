@@ -2,6 +2,8 @@ name: WorldEditAnimations
 version: '${project.version}'
 main: at.emielregis.worldeditanimations.WorldEditAnimations
 api-version: 1.17
-authors: [ EmielRegis ]
+authors:
+  - EmielRegis
+  - Haha007
 depend:
   - WorldEdit

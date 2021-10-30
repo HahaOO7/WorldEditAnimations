@@ -1,0 +1,6 @@
+period: 5
+world: world
+animationSteps:
+  - step[0,0,0,test.schem] #position,schem
+  - linear[0,0,0,10,0,0,10,test.schem] #start,end,step_count,schem
+  - arc[0,0,0,10,0,360,test.schem] #center,radius,start_angle,end_angle,step_count
