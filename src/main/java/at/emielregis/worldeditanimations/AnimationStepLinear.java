@@ -26,7 +26,7 @@ public class AnimationStepLinear implements Cloneable, IAnimationStep {
     }
 
     public boolean display() {
-        if(step > steps) step = 0;
+        if(step >= steps) step = 0;
         Vector pos = end.clone().subtract(start);
         double delta = 1d / steps * step;
         pos = pos.multiply(delta);
@@ -40,17 +40,5 @@ public class AnimationStepLinear implements Cloneable, IAnimationStep {
     public boolean destroy() {
         Optional.ofNullable(displayedFrame).ifPresent(AnimationFrame::delete);
         return step >= steps;
-    }
-
-    public AnimationStepLinear clone() {
-        try {
-            AnimationStepLinear clone = (AnimationStepLinear) super.clone();
-            clone.start = start;
-            clone.end = end;
-            clone.clipboard = clipboard;
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 }
