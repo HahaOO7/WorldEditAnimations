@@ -2,8 +2,6 @@ package at.emielregis.worldeditanimations;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,7 +12,6 @@ import java.util.stream.Collectors;
 
 public final class WorldEditAnimations extends JavaPlugin implements Listener {
     private static WorldEditAnimations instance;
-    private FileConfiguration fc = new YamlConfiguration();
     public final List<Animation> animationList = new ArrayList<>();
 
     public static WorldEditAnimations getInstance() {
@@ -26,10 +23,9 @@ public final class WorldEditAnimations extends JavaPlugin implements Listener {
         instance = this;
         saveDefaultConfig();
         reloadConfig();
-        this.fc = getConfig();
         getServer().getPluginManager().registerEvents(this, this);
 
-        ConfigurationSection animations = fc.getConfigurationSection("animations");
+        ConfigurationSection animations = getConfig().getConfigurationSection("animations");
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () ->
         {

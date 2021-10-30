@@ -2,7 +2,6 @@ package at.emielregis.worldeditanimations;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.blocks.Blocks;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
@@ -15,7 +14,6 @@ import com.sk89q.worldedit.world.World;
 import lombok.SneakyThrows;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.util.BlockVector;
 
 public class AnimationFrame {
     private final Location location;
