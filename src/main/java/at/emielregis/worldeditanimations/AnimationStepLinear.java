@@ -9,11 +9,11 @@ import java.util.Optional;
 import static at.emielregis.worldeditanimations.Utils.parseVector;
 import static java.util.Arrays.copyOfRange;
 
-public class AnimationStepLinear implements Cloneable, IAnimationStep {
-    private Vector start, end;
+public class AnimationStepLinear implements IAnimationStep {
+    private final Vector start, end;
     private final World world;
     private AnimationFrame displayedFrame;
-    private Clipboard clipboard;
+    private final Clipboard clipboard;
     private int step = 0;
     private final int steps;
 
@@ -26,7 +26,7 @@ public class AnimationStepLinear implements Cloneable, IAnimationStep {
     }
 
     public boolean display() {
-        if(step >= steps) step = 0;
+        if (step >= steps) step = 0;
         Vector pos = end.clone().subtract(start);
         double delta = 1d / steps * step;
         pos = pos.multiply(delta);

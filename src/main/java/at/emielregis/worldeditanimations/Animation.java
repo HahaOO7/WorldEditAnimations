@@ -35,6 +35,7 @@ public class Animation implements Listener {
         return switch (type) {
             case "step" -> new AnimationStepFrame(args, cache);
             case "linear" -> new AnimationStepLinear(args, cache);
+            case "noop" -> new AnimationStepNoop(args, cache);
             default -> throw new IllegalStateException("couldn't parse animation: " + s);
         };
     }
